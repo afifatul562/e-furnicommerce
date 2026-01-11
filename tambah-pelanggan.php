@@ -9,14 +9,12 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width-device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>YakinPerabot</title>
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-        <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
     </head>
     <body>
-        <!--header-->
         <header>
             <div class="container">
                 <h1><a href="dashboard.php">YakinPerabot</a></h1>
@@ -30,12 +28,11 @@
                 </ul>
             </div>
         </header>
-        <!--content-->
         <div class="section">
             <div class="container">
                 <h3>Tambah Data Pelanggan</h3>
                 <div class="box">
-                    <form action="tambah-pelanggan.php" method="POST">
+                    <form action="" method="POST">
                         <input type="text" name="nama" class="input-control" placeholder="Nama Lengkap" required>
                         <input type="text" name="alamat" class="input-control" placeholder="Alamat" required>
                         <input type="text" name="hp" class="input-control" placeholder="No Handphone" required>
@@ -43,10 +40,11 @@
                     </form>
                     <?php
                         if (isset($_POST['submit'])) {
-                            // menampung inputan dari form
-                            $nama   = ucwords($_POST['nama']);
-                            $alamat = ucwords($_POST['alamat']);
-                            $hp     = $_POST['hp'];
+                            // menampung inputan dari form & pengamanan
+                            $nama   = mysqli_real_escape_string($conn, ucwords($_POST['nama']));
+                            $alamat = mysqli_real_escape_string($conn, ucwords($_POST['alamat']));
+                            $hp     = mysqli_real_escape_string($conn, $_POST['hp']);
+                            
                             $insert = mysqli_query($conn, "INSERT INTO customer VALUES (
                                         null,
                                         '".$nama."',
@@ -65,14 +63,10 @@
                 </div>
             </div>
         </div>
-        <!--footer-->
         <footer>
         <div class="container">
             <small>Copyright &copy; 2024 - YakinPerabot.</small>
         </div>
         </footer>
-        <script>
-            CKEDITOR.replace('deskripsi');
-        </script>
     </body>
 </html>

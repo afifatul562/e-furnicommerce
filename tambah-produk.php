@@ -9,14 +9,13 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width-device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>YakinPerabot</title>
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
         <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
     </head>
     <body>
-        <!--header-->
         <header>
             <div class="container">
                 <h1><a href="dashboard.php">YakinPerabot</a></h1>
@@ -30,7 +29,6 @@
                 </ul>
             </div>
         </header>
-        <!--content-->
         <div class="section">
             <div class="container">
                 <h3>Tambah Data Produk</h3>
@@ -48,7 +46,7 @@
 
                         <input type="text" name="nama" class="input-control" placeholder="Nama Produk" required>
                         <input type="text" name="harga" class="input-control" placeholder="Harga" required>
-                        <input type="file" name="gambar" class="input-control"required>
+                        <input type="file" name="gambar" class="input-control" required>
                         <textarea class="input-control" name="deskripsi" placeholder="Deskripsi"></textarea><br>
                         <select class="input-control" name="status">
                             <option value="">--Pilih--</option>
@@ -59,25 +57,31 @@
                     </form>
                     <?php
                         if (isset($_POST['submit'])) {
-                            //print_r($_FILES['gambar']);
+                            // Menampung inputan & Pengamanan Karakter (Mencegah Error Tanda Kutip)
                             $kategori   = $_POST['kategori'];
-                            $nama       = $_POST['nama'];
-                            $harga      = $_POST['harga'];
-                            $deskripsi  = $_POST['deskripsi'];
+                            $nama       = mysqli_real_escape_string($conn, $_POST['nama']);
+                            $harga      = mysqli_real_escape_string($conn, $_POST['harga']);
+                            $deskripsi  = mysqli_real_escape_string($conn, $_POST['deskripsi']);
                             $status     = $_POST['status'];
 
+                            // Menampung data file
                             $filename = $_FILES['gambar']['name'];
                             $tmp_name = $_FILES['gambar']['tmp_name'];
 
+                            // Validasi format file (FIXED)
                             $type1 = explode('.', $filename);
-                            $type2 = $type1[1];
+                            $type2 = strtolower(end($type1)); // Mengambil ekstensi paling belakang & ubah ke huruf kecil
 
                             $tipe_diizinkan = array('jpeg', 'jpg', 'png');
 
                             if (!in_array($type2, $tipe_diizinkan)) {
                                 echo '<script>alert("Format file tidak diizinkan")</script>';
-                            }else {
-                                move_uploaded_file($tmp_name, './produk/'.$filename);
+                            } else {
+                                // Rename nama file dengan waktu agar unik (Optional, tapi disarankan)
+                                $new_filename = time() . '_' . $filename;
+                                
+                                // Upload file
+                                move_uploaded_file($tmp_name, './produk/' . $new_filename);
 
                                 $insert = mysqli_query($conn, "INSERT INTO product VALUES (
                                             null,
@@ -85,24 +89,22 @@
                                             '".$nama."',
                                             '".$harga."',
                                             '".$deskripsi."',
-                                            '".$filename."',
+                                            '".$new_filename."',
                                             '".$status."',
                                             null ) ");
 
                                 if ($insert) {
                                     echo '<script>alert("Simpan data berhasil")</script>';
                                     echo '<script>window.location="data-produk.php"</script>';
-                                }else {
-                                    echo 'Gagal'.mysqli_error($conn);
+                                } else {
+                                    echo 'Gagal '.mysqli_error($conn);
                                 }
                             }
                         }
-                        
                     ?>
                 </div>
             </div>
         </div>
-        <!--footer-->
         <footer>
         <div class="container">
             <small>Copyright &copy; 2024 - YakinPerabot.</small>
