@@ -1,4 +1,4 @@
-# YakinPerabot - Toko Online Furniture
+# E-FurniCommerce - Toko Online Furniture
 
 Website toko online furniture berbasis PHP dengan sistem CRUD untuk mengelola produk, kategori, dan pelanggan.
 
@@ -39,4 +39,4 @@ Lihat file `database_yakinperabot.sql` untuk struktur database lengkap.
 
 ## Lisensi
 
-Copyright © 2024 - YakinPerabot
+Copyright © 2024 - E-FurniCommerce
